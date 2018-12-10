@@ -17,7 +17,7 @@ def parse(text):
     v = (int(v[1]), int(v[2]))
     return Dot(p, v)
 
-def dprint(dots, i):
+def dprint(dots, i, limit=None):
     pos = list(map(lambda d: d.pos, dots))
     x_min = min(map(lambda d: d[0], pos))-1
     y_min = min(map(lambda d: d[1], pos))-1
@@ -25,9 +25,9 @@ def dprint(dots, i):
     y_max = max(map(lambda d: d[1], pos))+1
     w = x_max - x_min
     h = y_max - y_min
-    if h > 20:
+    if limit and h > limit:
         return False
-    print(i)
+    print('Part 1:')
     for y in range(y_min, y_max):
         for x in range(x_min, x_max):
             dot = (x, y)
@@ -36,6 +36,7 @@ def dprint(dots, i):
             else:
                 print('.', end='')
         print()
+    print('Part 2:', i)
     print()
     return True
 
@@ -50,13 +51,14 @@ def process(dots, n):
             dot.tick()
     dprint(dots, n)
 
-def process2(dots, n):
-    for i in range(0, n):
+def process2(dots):
+    i = 1
+    while True:
         for dot in dots:
             dot.tick()
-        ret = dprint(dots, i)
-        if ret:
+        if dprint(dots, i, 20):
             break
+        i += 1
 
 def test1():
     data = """position=< 9,  1> velocity=< 0,  2>
@@ -102,7 +104,7 @@ def main():
     data = map(str.strip, data)
     data = map(parse, data)
     dots = list(data)
-    process2(dots, 100000)
+    process2(dots)
 
 if __name__ == '__main__':
     test1()
